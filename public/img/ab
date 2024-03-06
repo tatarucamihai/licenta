@@ -1,0 +1,22 @@
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('coin').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        const review = this.elements.reviews.value; // Get the review text
+        fetch(`/coins/${coinId}/reviews`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ review: review }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Review added:', data);
+            // Optionally, update the UI here to show the new review
+        })
+        .catch(error => {
+            console.error('Error adding review:', error);
+        });
+    });
+});
