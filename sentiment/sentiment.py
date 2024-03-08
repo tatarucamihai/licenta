@@ -116,8 +116,6 @@ CORS(app)
 sentiment_analyzer = SentimentIntensityAnalyzer()
 @app.route('/analyze', methods=['POST'])
 
-
-
 def analyze_review():
     data = request.json
     review = data.get('review', '')  # Access the review from the POST request
@@ -131,6 +129,7 @@ def analyze_review():
     predicted_sentiment = review_score(review, best_model)
     sentiment_score = float(predicted_sentiment[0])
 
+    print(review)
     print("The VADER compound score of the review is", compound_score)
     print("Logistic regression predicted sentiment witn an accuracy of", predicted_sentiment)
 

@@ -19,7 +19,8 @@ app.use(cors())
 
 
 const port = process.env.PORT || 3000
-const publicDirectory = path.join(__dirname, '../public')
+const publicDirectory = path.join(__dirname, '../public',)
+
 
 app.use(express.static(publicDirectory))
 app.use(userRouter)
@@ -28,18 +29,18 @@ app.use(coinRouter)
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}!`)
-    
+
 })
 
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(publicDirectory, 'login.html'));
+    res.sendFile(path.join(publicDirectory, 'views', 'login.html'));
 })
 
 app.get('/register', (req, res) => {
-    res.sendFile(path.join(publicDirectory, 'register.html'));
+    res.sendFile(path.join(publicDirectory, 'views', 'register.html'));
 })
 
 app.get('/coin', (req, res) => {
-    res.sendFile(path.join(publicDirectory, 'coin.html'));
+    res.sendFile(path.join(publicDirectory, 'views', 'coin.html'));
 })
 
