@@ -25,7 +25,12 @@ const coinSchema = new mongoose.Schema({
         type: Number,
         required: true,
         trim: true
+    },
+    averageSentimentScore: {
+        type: Number,
+        default: 0
     }
+    
 });
 
 const Coin = mongoose.model('Coin', coinSchema)

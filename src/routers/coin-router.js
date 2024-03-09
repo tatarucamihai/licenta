@@ -20,9 +20,20 @@ router.post('/coins/create', async (req, res) => {
     }
 })
 
+router.get('/coins/:coinId',  async (req, res) => {
+    try {
+        const coinId = req.params.coinId
+        const coin = await Coin.findById(coinId)
+        res.send({ coin })
+    } catch (e) {
+        console.error(e)
+        res.status(500).send(e)
+    }
+})
+
 router.get('/coins', auth, async (req, res) => {
     try {
-        const coins = await Coin.find()
+        const coins = await Coin.find().sort({ averageSentimentScore: -1 })
         res.send({ coins })
     } catch (e) {
         console.error(e)
@@ -45,8 +56,17 @@ router.post('/coins/reviews/sentiment', async (req, res) => {
         if (sentimentScore === undefined) {
             return res.status(400).send('No sentiment score was submitted')
         }
-
         coin.reviews.push({ reviewText: review, sentimentScore: sentimentScore })
+        
+        const score = coin.reviews.reduce((acc, review) => {
+            if(review && review.sentimentScore) {
+                return acc + review.sentimentScore
+            }
+            return acc
+        }, 0)
+        if(coin.reviews.length > 0) {
+            coin.averageSentimentScore = score / coin.reviews.length
+        }
         await coin.save()
         res.send(coin)
 
@@ -56,14 +76,29 @@ router.post('/coins/reviews/sentiment', async (req, res) => {
     }
 })
 
-router.post('/coins/delete/:id',  async (req, res) => {
-    try {const coin = await Coin.findByIdAndDelete(req.params.id)
+router.post('/coins/delete/:id', async (req, res) => {
+    try {
+        const coin = await Coin.findByIdAndDelete(req.params.id)
         res.status(200).send(coin)
 
-    }catch(e){
+    } catch (e) {
         res.status(500).send(e)
     }
-    
+
+})
+
+router.post('coins/delete/:coinId', async (req, res) => {
+    try {
+        const coinId = req.params.coinId
+        const coin = await Coin.findById(coinId)
+        if (!coin) {
+            return res.status(404).send('Coin not found')
+        }
+        await coin.remove()
+        res.status(200).send(coin)
+    } catch (e) {
+        res.status(500).send(e)
+    }
 })
 
 module.exports = router

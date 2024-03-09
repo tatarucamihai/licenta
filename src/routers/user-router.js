@@ -37,7 +37,7 @@ router.post('/users/login', async (req, res) => {
 router.post('/users/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => { //pt logout de pe device-ul curent facem filter si
-                                                                //pastram doar tokenurile ce nu sunt egale cu cel curent
+                                                             //pastram doar tokenurile ce nu sunt egale cu cel curent
             return token.token !== req.token
         })
         await req.user.save()

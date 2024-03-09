@@ -17,6 +17,7 @@ from flask_cors import CORS
 
 data = pd.read_csv('data.csv')
 
+
 # Initialize variables
 wordnet_lemmatizer = WordNetLemmatizer()
 word_index_map = {}
