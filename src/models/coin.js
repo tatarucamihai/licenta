@@ -21,10 +21,9 @@ const coinSchema = new mongoose.Schema({
 
     reviews: [reviewSchema],
 
-    price: {
+    currencyValue:{
         type: Number,
-        required: true,
-        trim: true
+        default: 0
     },
     averageSentimentScore: {
         type: Number,

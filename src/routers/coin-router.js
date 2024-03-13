@@ -1,4 +1,5 @@
 const Coin = require('../models/coin')
+const axios = require('axios')
 const express = require('express')
 const router = new express.Router()
 const auth = require('../../middleware/auth')
@@ -20,7 +21,7 @@ router.post('/coins/create', async (req, res) => {
     }
 })
 
-router.get('/coins/:coinId',  async (req, res) => {
+router.get('/coins/:coinId', async (req, res) => {
     try {
         const coinId = req.params.coinId
         const coin = await Coin.findById(coinId)
@@ -57,14 +58,14 @@ router.post('/coins/reviews/sentiment', async (req, res) => {
             return res.status(400).send('No sentiment score was submitted')
         }
         coin.reviews.push({ reviewText: review, sentimentScore: sentimentScore })
-        
+
         const score = coin.reviews.reduce((acc, review) => {
-            if(review && review.sentimentScore) {
+            if (review && review.sentimentScore) {
                 return acc + review.sentimentScore
             }
             return acc
         }, 0)
-        if(coin.reviews.length > 0) {
+        if (coin.reviews.length > 0) {
             coin.averageSentimentScore = score / coin.reviews.length
         }
         await coin.save()
@@ -100,5 +101,51 @@ router.post('coins/delete/:coinId', async (req, res) => {
         res.status(500).send(e)
     }
 })
+
+// router.post('/coins/update-currency/:coinId', async (req, res) => {
+//     try {
+//         const coinId = req.params.coinId;
+//         const coin = await Coin.findById(coinId);
+
+//         if (!coin) {
+//             return res.status(404).send('Coin not found');
+//         }
+
+//         const response = await axios.get('https://rest.coinapi.io/v1/exchangerate/BTC/USD', {
+//             headers: { 'X-CoinAPI-Key': 'CAEC9731-272E-48C4-ACBC-7B9159E28CAE' }
+//         });
+
+//         coin.currencyValue = response.data.rate;
+//         await coin.save();
+
+//         res.status(200).send(coin);
+//     } catch (e) {
+//         console.error('Error updating currency value', e);
+//         res.status(500).send(e);
+//     }
+// });
+
+
+
+router.get('/api/btc-rate/:coinId', async (req, res) => {
+    try {
+        const coinId = req.params.coinId
+        const coin = await Coin.findById(coinId)
+        if (!coin) {
+            return res.status(404).send('Coin not found')
+        }
+        const response = await axios.get('https://rest.coinapi.io/v1/exchangerate/BTC/USD', {
+            headers: { 'X-CoinAPI-Key': 'CAEC9731-272E-48C4-ACBC-7B9159E28CAE' }
+            
+        })
+        res.json({ rate: response.data.rate })
+
+    } catch (e) {
+        console.error('Error fetching BTC rate', e)
+
+    }
+
+})
+
 
 module.exports = router

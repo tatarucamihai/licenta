@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const token = localStorage.getItem('token')
-   
+
     if (!token) {
         document.getElementById('coinInfo').innerHTML = '<p>Please login to view your coins!</p>'
         return
@@ -14,19 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             const info = document.getElementById('coinInfo');
-           
+
 
             if (data.coins && data.coins.length > 0) {
                 info.innerHTML = data.coins.map(coin =>
                     `<div class = "coin-container">
                         <p>Name: ${coin.name}</p>
                         <a href="/coin-details.html?coinId=${coin._id}" class="view-details-btn">View Details</a>
-                        <form class="review-form">
-                            <input type="hidden" name="coinId" value="${coin._id}">
-                            <label>Write your review:</label>
-                            <input type="text" name="review" required><br>
-                            <button type="submit">Submit Review</button>
-                        </form>
                     </div>`
                 ).join('');
             } else {
