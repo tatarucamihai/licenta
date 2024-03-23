@@ -64,7 +64,6 @@ document.getElementById('logout').addEventListener('click', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
     const username = localStorage.getItem('username')
-   
 
     if(username)
    {

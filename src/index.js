@@ -5,8 +5,10 @@ const cors = require('cors')
 
 
 require('./db/mongoose')
+
 const userRouter = require('./routers/user-router')
 const coinRouter = require('./routers/coin-router')
+const currencyRouter = require('./routers/currency-router')
 
 
 
@@ -25,6 +27,7 @@ const publicDirectory = path.join(__dirname, '../public',)
 app.use(express.static(publicDirectory))
 app.use(userRouter)
 app.use(coinRouter)
+app.use(currencyRouter)
 
 
 app.listen(port, () => {

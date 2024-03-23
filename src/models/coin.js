@@ -28,7 +28,13 @@ const coinSchema = new mongoose.Schema({
     averageSentimentScore: {
         type: Number,
         default: 0
+    },
+    coinType:{
+        required: true,
+        type: String,
+        
     }
+
     
 });
 
